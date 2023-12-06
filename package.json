@@ -1,0 +1,21 @@
+{
+  "name": "my-app",
+  "version": "0.0.1",
+  "description": "My App Template",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo TODO - modify this script to test your library",
+    "build": "echo TODO - modify this script to build your library"
+  },
+  "repository": {},
+  "keywords": [],
+  "author": "Yu Li",
+  "license": "MIT",
+  "bugs": {},
+  "homepage": "",
+  "devDependencies": {
+    "eslint": "^8.18.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
+  }
+}

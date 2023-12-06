@@ -1,0 +1,7 @@
+.zcompdump
+.zsh_history
+.venv/
+.nodevenv/
+node_modules/
+dist/
+build/

@@ -1,0 +1,30 @@
+name: Publish package to GitHub Packages
+on:
+  push:
+    branches: ["release"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v3
+
+      - run: pipx install poetry
+
+      - uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+          cache: "poetry"
+
+      - run: ./initenv.bash
+
+      - run: |
+          source ./devenv.bash
+          npm ci
+          npm run build
+          npm run test

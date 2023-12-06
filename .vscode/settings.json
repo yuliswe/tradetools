@@ -1,0 +1,34 @@
+{
+  "terminal.integrated.profiles.osx": {
+    "bash": {
+      "path": "bash",
+      "args": ["-l"],
+      "icon": "terminal-bash"
+    },
+    "zsh": {
+      "path": "zsh",
+      "args": ["-l"],
+      "env": {
+        "ZDOTDIR": "${workspaceFolder}"
+      }
+    },
+    "fish": {
+      "path": "fish",
+      "args": ["-l"]
+    },
+    "tmux": {
+      "path": "tmux",
+      "icon": "terminal-tmux"
+    },
+    "pwsh": {
+      "path": "pwsh",
+      "icon": "terminal-powershell"
+    }
+  },
+  "files.exclude": {
+    ".nodevenv": true,
+    ".venv": true,
+    ".zcompdump": true,
+    ".zsh_history": true
+  }
+}
