@@ -1,0 +1,22 @@
+# This configuration file tells GraphQL Code Generator how
+# to generate types based on our schema.
+documents:
+  # - "src/wealthsimple/**/*.ts"
+  # - "tests/wealthsimple/**/*.ts"
+  - "src/graphqlQueries/**/*.graphql"
+schema: "src/wealthsimple.graphql"
+generates:
+  # ./src/__generated__/gql/:
+  #   preset: client
+  #   config:
+  #     # namingConvention: keep
+  ./src/__generated__/sdk.ts:
+    config:
+      defaultScalarType: 'never'
+      scalars:
+        Datetime: string
+        Cursor: string
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-graphql-request

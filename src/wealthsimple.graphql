@@ -1,0 +1,199 @@
+scalar Cursor
+scalar Datetime
+
+type Query {
+  identity(id: ID!): Identity!
+  security(id: ID!): Security!
+  activities(
+    first: Int!
+    after: Cursor
+    accountIds: [String!]
+    types: [ActivityFeedItemType!]
+    subTypes: [ActivityFeedItemSubType!]
+    endDate: Datetime
+    securityIds: [String]
+    startDate: Datetime
+    legacyStatuses: [String]
+  ): ActivityList!
+}
+
+type Identity {
+  id: ID!
+  watchedSecurities: WatchedSecurityConnection
+  accounts(
+    first: Int!
+    after: String
+    filter: AccountsFilter
+  ): AccountConnection!
+}
+
+input AccountsFilter {
+  id: ID!
+}
+
+type WatchedSecurityConnection {
+  pageInfo: PageInfo!
+  edges: [WatchedSecurityEdge!]!
+}
+
+type WatchedSecurityEdge {
+  node: Security!
+}
+
+type Security {
+  id: ID!
+  allowedOrderSubtypes: [String!]!
+  fundamentals: Fundamentals!
+  quote: Quote!
+  stock: Stock!
+}
+
+type Fundamentals {
+  avgVolume: Float!
+  high52Week: Float!
+  low52Week: Float!
+  yield: Float!
+  peRatio: Float!
+  marketCap: Float!
+  currency: String!
+  description: String!
+}
+
+type Quote {
+  bid: String!
+  ask: String!
+  open: String!
+  high: String!
+  low: String!
+  volume: Int!
+  askSize: Int!
+  bidSize: Int!
+  last: String!
+  lastSize: Int!
+  quotedAsOf: String!
+  quoteDate: String!
+  amount: String!
+  previousClose: String!
+}
+
+type Stock {
+  primaryExchange: String!
+  primaryMic: String!
+  name: String!
+  symbol: String!
+}
+
+enum WatchedSecuritySort {
+  SYMBOL
+  NAME
+  LAST
+  OPEN
+  PREVIOUS_CLOSE
+}
+
+type AccountConnection {
+  pageInfo: PageInfo!
+  edges: [AccountEdge!]!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: String!
+}
+
+type AccountEdge {
+  cursor: String!
+  node: Account!
+}
+
+type Account {
+  id: ID!
+  type: String!
+  custodianAccounts: [CustodianAccount!]!
+}
+
+type CustodianAccount {
+  id: ID!
+  financials: CustodianAccountFinancialsSo!
+}
+
+type CustodianAccountFinancialsSo {
+  id: ID!
+  current: CustodianAccountCurrentFinancialValues!
+}
+
+type CustodianAccountCurrentFinancialValues {
+  id: ID!
+  netDeposits: Money!
+  netLiquidationValue: Money!
+}
+
+type Money {
+  amount: String!
+  currency: String!
+  cents: Int!
+}
+
+type ActivityList {
+  edges: [ActivitiesEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ActivitiesEdge {
+  node: ActivityFeedItem!
+}
+
+enum ActivityFeedItemStatus {
+  FILLED
+}
+
+enum Currency {
+  USD
+  CAD
+}
+
+enum ActivityFeedItemType {
+  DIY_BUY
+}
+
+enum ActivityFeedItemSubType {
+  RECURRING_ORDER
+}
+
+type ActivityFeedItem {
+  accountId: String
+  aftOriginatorName: String
+  aftTransactionCategory: String
+  aftTransactionType: String
+  amount: String!
+  amountSign: String
+  assetQuantity: String
+  assetSymbol: String
+  canonicalId: String
+  currency: Currency
+  eTransferEmail: String
+  eTransferName: String
+  externalCanonicalId: String
+  identityId: String!
+  institutionName: String
+  occurredAt: Datetime
+  p2pHandle: String
+  p2pMessage: String
+  spendMerchant: String
+  securityId: String!
+  billPayCompanyName: String
+  billPayPayeeNickname: String
+  redactedExternalAccountNumber: String
+  opposingAccountId: String
+  status: ActivityFeedItemStatus
+  subType: ActivityFeedItemSubType
+  type: ActivityFeedItemType
+  strikePrice: String
+  contractType: String
+  expiryDate: Datetime
+  chequeNumber: String
+  provisionalCreditAmount: String
+  primaryBlocker: String
+  interestRate: String
+  frequency: String
+}

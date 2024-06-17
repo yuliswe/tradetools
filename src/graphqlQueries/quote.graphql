@@ -1,0 +1,42 @@
+query FetchSecurityMarketData($id: ID!) {
+  security(id: $id) {
+    ...SecurityMarketData
+  }
+}
+
+fragment SecurityMarketData on Security {
+  id
+  allowedOrderSubtypes
+  fundamentals {
+    avgVolume
+    high52Week
+    low52Week
+    yield
+    peRatio
+    marketCap
+    currency
+    description
+  }
+  quote {
+    bid
+    ask
+    open
+    high
+    low
+    volume
+    askSize
+    bidSize
+    last
+    lastSize
+    quotedAsOf
+    quoteDate
+    amount
+    previousClose
+  }
+  stock {
+    primaryExchange
+    primaryMic
+    name
+    symbol
+  }
+}

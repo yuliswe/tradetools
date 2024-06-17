@@ -30,5 +30,16 @@
     ".venv": true,
     ".zcompdump": true,
     ".zsh_history": true
-  }
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "workbench.colorCustomizations": {
+    "sash.hoverBorder": "#ab307e",
+    "statusBar.background": "#832561",
+    "statusBar.foreground": "#e7e7e7",
+    "statusBarItem.hoverBackground": "#ab307e",
+    "statusBarItem.remoteBackground": "#832561",
+    "statusBarItem.remoteForeground": "#e7e7e7"
+  },
+  "peacock.color": "#832561"
 }

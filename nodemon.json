@@ -1,0 +1,18 @@
+{
+    "watch": [
+        "src",
+        "*.yml",
+        "*.graphql",
+        "*.json",
+        "*.js"
+    ],
+    "ext": "js,ts,graphql,yml,yaml,json",
+    "ignore": [
+        "src/__generated__",
+        "**/node_modules/**",
+        "**/build/**",
+        "**/dist/**"
+    ],
+    "signal": "SIGINT",
+    "exec": "npm run build"
+}

@@ -1,0 +1,4 @@
+projects:
+  default:
+    schema: "src/wealthsimple.graphql"
+    documents: "src/graphqlQueries/**/*.graphql"

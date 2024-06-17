@@ -21,3 +21,6 @@ pathadd() {
 }
 
 pathadd "$NPM_BIN"
+
+alias run-ts="npx node -r esbuild-register --loader esbuild-register/loader"
+alias cli="npm run cli --"

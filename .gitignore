@@ -5,3 +5,7 @@
 node_modules/
 dist/
 build/
+__generated__/
+.env
+.env.*
+

@@ -1,0 +1,26 @@
+query FetchAllAccountFinancials($identityId: ID!) {
+  identity(id: $identityId) {
+    accounts(first: 25) {
+      edges {
+        cursor
+        node {
+          # Account
+          id
+          type
+          custodianAccounts {
+            financials {
+              current {
+                netDeposits {
+                  amount
+                }
+                netLiquidationValue {
+                  amount
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
