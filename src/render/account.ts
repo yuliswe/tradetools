@@ -97,7 +97,12 @@ export type PositionTableRow = {
    * Difference between daily recurring buy and guidance daily recurring buy.
    */
   dailyRecurringBuyFix: number;
-  numTradingDaysUntilTargetAjustmentCompleteDate: number;
+  targetRemainingDaysUntilAdjustmentCompletion: number;
+  /**
+   * The expected date on which the adjustment is complete using current daily
+   * recurring buy.
+   */
+  actualRemainingDaysUntilAdjustmentCompletion: number;
 };
 
 export type PostionTableData = {
@@ -141,14 +146,6 @@ export function computePositionTableData(args: {
     targetAdjustmentCompleteDate,
   } = args;
   const { netLiquidationValue } = account;
-  // Number of trade days from now until target adjustment complete date. Each
-  // week has 5 trade days.
-  const diffDaysUnitlTargetAjustmentCompleteDate = Math.floor(
-    targetAdjustmentCompleteDate.diffNow("days").days
-  );
-  const numTradingDaysUntilTargetAjustmentCompleteDate =
-    diffDaysUnitlTargetAjustmentCompleteDate -
-    Math.floor(diffDaysUnitlTargetAjustmentCompleteDate / 7) * 2;
   let totalMarketValue = 0;
   // hack: remove lock in amount from portfolio net liquidation value when
   // calculating percentage of portfolio
@@ -193,13 +190,30 @@ export function computePositionTableData(args: {
       effectiveNetLiquidationValue;
     const dailyRecurringBuy =
       yesterdayRecurringBuysBySecurityId.get(securityId) ?? 0;
+    // Number of trade days from now until target adjustment complete date. Each
+    // week has 5 trade days.
+    const diffDaysUnitlTargetAjustmentCompleteDate = Math.floor(
+      targetAdjustmentCompleteDate.diffNow("days").days
+    );
+    const targetRemainingDaysUntilAdjustmentCompletion =
+      guidanceDeltaAmount > 0
+        ? diffDaysUnitlTargetAjustmentCompleteDate -
+          Math.floor(diffDaysUnitlTargetAjustmentCompleteDate / 7) * 2
+        : 0;
     const guidanceDailyRecurringBuy =
       guidancePercentage * dailyDeposit +
       Math.max(
         0,
-        guidanceDeltaAmount / numTradingDaysUntilTargetAjustmentCompleteDate
+        guidanceDeltaAmount / targetRemainingDaysUntilAdjustmentCompletion
       );
     const dailyRecurringBuyFix = guidanceDailyRecurringBuy - dailyRecurringBuy;
+    const actualRemainingDaysUntilAdjustmentCompletion =
+      guidanceDeltaAmount > 0
+        ? Math.round(
+            guidanceDeltaAmount /
+              Math.max(0, dailyRecurringBuy - guidancePercentage * dailyDeposit)
+          )
+        : 0;
 
     const row: PositionTableRow = {
       symbol,
@@ -219,7 +233,8 @@ export function computePositionTableData(args: {
       guidanceDailyRecurringBuy,
       dailyRecurringBuy,
       dailyRecurringBuyFix,
-      numTradingDaysUntilTargetAjustmentCompleteDate,
+      targetRemainingDaysUntilAdjustmentCompletion,
+      actualRemainingDaysUntilAdjustmentCompletion,
     };
     rows.set(symbol, row);
   }
@@ -353,7 +368,6 @@ export function renderPositionsTable(args: {
       "Last",
       "Bid",
       "Ask",
-      // `±B.A./$${dollarImpactAmount}`,
       "Gain %",
       "Total Gain",
       "Market Value",
@@ -363,7 +377,8 @@ export function renderPositionsTable(args: {
       "Guidance\nDaily Buy",
       "Actual\nDaily Buy",
       "Daily\nBuy Fix",
-      "Days",
+      "Target\nDays",
+      "Actual\nDays",
     ],
   });
   const rows = Array.from(tableData.positions.values()).sort(
@@ -384,7 +399,8 @@ export function renderPositionsTable(args: {
       biddingPrice,
       guidanceDeltaAmount,
       guidancePercentage,
-      numTradingDaysUntilTargetAjustmentCompleteDate,
+      targetRemainingDaysUntilAdjustmentCompletion,
+      actualRemainingDaysUntilAdjustmentCompletion,
       dailyRecurringBuy,
       guidanceDailyRecurringBuy,
       dailyRecurringBuyFix,
@@ -407,7 +423,8 @@ export function renderPositionsTable(args: {
       renderPrice(guidanceDailyRecurringBuy), // Guidance Daily Buy
       renderPrice(dailyRecurringBuy), // Actual Daily Buy
       renderPriceChange(dailyRecurringBuyFix), // Daily Buy Fix
-      numTradingDaysUntilTargetAjustmentCompleteDate.toFixed(), // Days
+      targetRemainingDaysUntilAdjustmentCompletion.toFixed(), // Target Days
+      actualRemainingDaysUntilAdjustmentCompletion.toFixed(), // Actual Days
     ]);
   }
 
